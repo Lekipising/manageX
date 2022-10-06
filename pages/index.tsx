@@ -1,15 +1,31 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Hello Next.js 👋</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
-  </Layout>
-)
+export default function Home() {
+  const [users, setUsers] = useState([]);
 
-export default IndexPage
+  // fetch users from DB using prisma client
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get("/api/users/get");
+      console.log(res.data);
+      setUsers(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  return (
+    <div>
+      <div>
+        {users.map((usr) => (
+          <p key={usr.id}>{usr.name}</p>
+        ))}
+      </div>
+    </div>
+  );
+}

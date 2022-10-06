@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("DATABASE_URL_TEST")
+}
+
+// create MODELS
+
+// create USERS table
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  role     String   @default("STUDENT")
+  // create RELATIONSHIP
+  requests     Request[]
+}
+
+// create REQUESTS table
+model Request {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // create RELATIONSHIP
+  userId Int
+  student   User  @relation(fields: [userId], references: [id])
+  // create comments RELATIONSHIP
+  comments  Comment[]
+}
+
+// create COMMENTS table
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // create RELATIONSHIP
+  requestId Int
+  request   Request  @relation(fields: [requestId], references: [id])
+}
