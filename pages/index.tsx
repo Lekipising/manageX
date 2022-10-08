@@ -6,6 +6,7 @@ import CreateRequest from "../components/request";
 import SignUpForm from "../components/signup";
 import ViewRequests from "../components/viewRequests";
 import ViewOneRequest from "../components/oneRequest";
+import Spinner from "../components/spinners";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
@@ -31,7 +32,9 @@ export default function Home() {
 
   const [showCreateRequestModal, setShowCreateRequestModal] = useState(false);
 
-  if (isLoggedIn === null) return null;
+  const [reloadRequests, setReloadRequests] = useState(false);
+
+  if (isLoggedIn === null) return <Spinner />;
 
   return (
     <main className="flex">
@@ -65,9 +68,13 @@ export default function Home() {
             <ViewRequests
               showCreate={() => setShowCreateRequestModal(true)}
               showRequest={(req) => setShowingRequest(req)}
+              reloadRequests={reloadRequests}
             />
             {showCreateRequestModal && (
-              <CreateRequest close={() => setShowCreateRequestModal(false)} />
+              <CreateRequest
+                reloadRequests={() => setReloadRequests(!reloadRequests)}
+                close={() => setShowCreateRequestModal(false)}
+              />
             )}
             {showingRequest && (
               <ViewOneRequest

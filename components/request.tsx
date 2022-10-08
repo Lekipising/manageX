@@ -1,7 +1,13 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-export default function CreateRequest({ close }: { close: () => void }) {
+export default function CreateRequest({
+  close,
+  reloadRequests,
+}: {
+  close: () => void;
+  reloadRequests: () => void;
+}) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const loggedInUser = 24;
@@ -24,6 +30,7 @@ export default function CreateRequest({ close }: { close: () => void }) {
       console.log(res);
       setLoading(false);
       resetForm();
+      reloadRequests();
       close();
     } catch (error) {
       setLoading(false);
