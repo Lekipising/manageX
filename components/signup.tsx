@@ -125,7 +125,11 @@ export default function SignUpForm() {
                 name="email"
                 id="email"
                 placeholder="Enter email"
-                className="w-full"
+                className={`w-full ${
+                  !validEmail &&
+                  email.length > 0 &&
+                  "border-red-500 focus:border-red-500"
+                }`}
                 value={email}
                 onChange={(e) => {
                   validateEmail(e.target.value);
@@ -157,7 +161,11 @@ export default function SignUpForm() {
                 name="password-confirm"
                 id="password-confirm"
                 placeholder="Enter password again"
-                className="w-full"
+                className={`w-full ${
+                  password !== confirmPassword &&
+                  confirmPassword.length > 0 &&
+                  "border-red-500 focus:border-red-500"
+                }`}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
