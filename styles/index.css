@@ -39,4 +39,5 @@ input:focus, textarea:focus {
 
 textarea {
     resize: none;
+    padding: 5px;
 }

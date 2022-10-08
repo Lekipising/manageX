@@ -1,6 +1,7 @@
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import CommentModal from "../components/comment";
 import LoginForm from "../components/login";
 import CreateRequest from "../components/request";
 import SignUpForm from "../components/signup";
@@ -39,7 +40,7 @@ export default function Home() {
         </>
       ) : (
         <div>
-          <CreateRequest />
+          <CommentModal />
         </div>
       )}
     </main>

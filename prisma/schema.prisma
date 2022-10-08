@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("DATABASE_URL_TEST")
 }
 
@@ -15,27 +15,28 @@ datasource db {
 
 // create USERS table
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  email     String   @unique
+  email     String    @unique
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role     String   @default("STUDENT")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  role      String    @default("STUDENT")
   // create RELATIONSHIP
-  requests     Request[]
+  requests  Request[]
+  Comment   Comment[]
 }
 
 // create REQUESTS table
 model Request {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
   content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   // create RELATIONSHIP
-  userId Int
-  user   User  @relation(fields: [userId], references: [id])
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
   // create comments RELATIONSHIP
   comments  Comment[]
 }
@@ -49,4 +50,6 @@ model Comment {
   // create RELATIONSHIP
   requestId Int
   request   Request  @relation(fields: [requestId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 }
