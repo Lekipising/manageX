@@ -24,7 +24,7 @@ body {
     scrollbar-color: #cf021a #fff;
 }
 
-input {
+input, textarea {
     border: 1px solid black;
     outline: none;
     border-radius: 5px;
@@ -32,7 +32,11 @@ input {
     padding: 0 5px;
 }
 
-input:focus {
+input:focus, textarea:focus {
     border: 1px solid black;
     outline: none;
+}
+
+textarea {
+    resize: none;
 }

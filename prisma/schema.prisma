@@ -35,7 +35,7 @@ model Request {
   updatedAt DateTime @updatedAt
   // create RELATIONSHIP
   userId Int
-  student   User  @relation(fields: [userId], references: [id])
+  user   User  @relation(fields: [userId], references: [id])
   // create comments RELATIONSHIP
   comments  Comment[]
 }

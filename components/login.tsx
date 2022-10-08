@@ -80,7 +80,7 @@ export default function LoginForm() {
             }}
             className="disabled:bg-[#828282] bg-[#FA7070] mt-8 text-white px-8 py-2 font-bold rounded-[5px] w-full"
           >
-            Login
+            {loading ? "Loading..." : "Login"}
           </button>
         </form>
       </div>

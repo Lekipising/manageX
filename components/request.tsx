@@ -1,24 +1,76 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 
 export default function CreateRequest() {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const loggedInUser = 24;
+
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+  };
+  const [loading, setLoading] = useState(false);
+
+  const submitForm = async () => {
+    const requestObj = {
+      title,
+      description,
+      userId: loggedInUser,
+    };
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/requests/create", requestObj);
+      console.log(res);
+      setLoading(false);
+      resetForm();
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white w-[50vw] h-[50vw]">
-        <h1>Create a request</h1>
-        <form>
-          <div>
+      <div className="w-[40vw] h-[30vw] rounded-[15px] p-8 flex flex-col gap-4 bg-white justify-center items-center">
+        <h1 className="text-[#212121] font-bold text-[30px]">
+          Create a request
+        </h1>
+        <form className="flex flex-col gap-4 w-1/2 mt-6">
+          <div className="w-full">
             <input
               type="text"
               name="title"
               id="title"
               placeholder="Enter title"
+              className="w-full"
+              value={title}
+              required
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
-          <div>
-            <textarea name="content" id="content" className="Request details" />
+          <div className="w-full">
+            <textarea
+              name="content"
+              id="content"
+              className="w-full h-[100px]"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              placeholder="Enter request details"
+            />
           </div>
 
-          <button>Create request</button>
+          <button
+            disabled={!title || !description || loading}
+            onClick={(e) => {
+              e.preventDefault();
+              submitForm();
+            }}
+            className="disabled:bg-[#828282] bg-[#FA7070] mt-8 text-white px-8 py-2 font-bold rounded-[5px] w-full"
+          >
+            {loading ? "Creating..." : "Create request"}
+          </button>
         </form>
       </div>
     </div>

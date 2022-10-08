@@ -2,6 +2,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import LoginForm from "../components/login";
+import CreateRequest from "../components/request";
 import SignUpForm from "../components/signup";
 import ViewRequests from "../components/viewRequests";
 
@@ -38,7 +39,7 @@ export default function Home() {
         </>
       ) : (
         <div>
-          <LoginForm />
+          <CreateRequest />
         </div>
       )}
     </main>
