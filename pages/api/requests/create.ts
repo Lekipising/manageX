@@ -3,14 +3,15 @@ import prisma from '../../../lib/prisma'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // this request is user to create a new request: receives title, description, and user id
-    const { title, description, userId } = req.body;
+    const { title, description, userId, assignedId } = req.body;
     try {
         // create request
         const request = await prisma.request.create({
             data: {
                 title,
                 content: description,
-                userId
+                userId,
+                assignedId
             }
         });
         // return request
