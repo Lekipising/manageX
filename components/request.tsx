@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
+import Swal from "sweetalert2";
+
 export default function CreateRequest({
   close,
   reloadRequests,
@@ -35,6 +37,13 @@ export default function CreateRequest({
     try {
       setLoading(true);
       const res = await axios.post("/api/requests/create", requestObj);
+      Swal.fire({
+        title: "Success!",
+        text: "Request created successfully",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       console.log(res);
       setLoading(false);
       resetForm();

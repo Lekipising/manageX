@@ -8,6 +8,8 @@ const lowercaseRegex = /[a-z]/;
 const numberRegex = /[0-9]/;
 const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
+import Swal from "sweetalert2";
+
 export default function SignUpForm({
   showModal,
 }: {
@@ -103,6 +105,13 @@ export default function SignUpForm({
     try {
       setLoading(true);
       const res = await axios.post("/api/users/create", userObj);
+      Swal.fire({
+        title: "Success!",
+        text: "Your account has been created.",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       console.log(res);
       resetForm();
       setLoading(false);
@@ -114,9 +123,7 @@ export default function SignUpForm({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-main"
-    >
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-main">
       <div className="w-max min-w-[700px] h-max rounded-[15px] p-8 flex flex-col gap-4 bg-white">
         <h1 className="text-[#212121] font-bold text-[30px]">
           Create an account

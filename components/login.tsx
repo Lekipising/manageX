@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 
+import Swal from "sweetalert2";
+
 export default function LoginForm({
   showModal,
   loginSuccess,
@@ -32,6 +34,12 @@ export default function LoginForm({
     try {
       setLoading(true);
       const res = await axios.post("/api/users/login", userObj);
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       console.log(res);
       setLoading(false);
       resetForm();
@@ -45,9 +53,7 @@ export default function LoginForm({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-main"
-    >
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-main">
       <div className="w-max min-w-[500px] h-max rounded-[15px] p-8 flex flex-col gap-4 bg-white justify-center items-center">
         <h1 className="text-[#212121] font-bold text-[30px]">Login</h1>
         <form className="flex flex-col gap-4 w-1/2 mt-6">
