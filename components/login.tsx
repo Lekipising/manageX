@@ -4,11 +4,9 @@ import React, { useState } from "react";
 export default function LoginForm({
   showModal,
   loginSuccess,
-  close,
 }: {
   showModal: (modal: string) => void;
   loginSuccess: () => void;
-  close: () => void;
 }) {
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState(false);
@@ -48,7 +46,6 @@ export default function LoginForm({
 
   return (
     <div
-      onClick={(e) => (e.target === e.currentTarget ? close() : null)}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-main"
     >
       <div className="w-max min-w-[500px] h-max rounded-[15px] p-8 flex flex-col gap-4 bg-white justify-center items-center">

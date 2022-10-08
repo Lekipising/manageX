@@ -87,15 +87,11 @@ export default function Home() {
       ) : (
         <div>
           {showModal === "create" ? (
-            <SignUpForm
-              showModal={() => setShowModal("login")}
-              close={() => setShowModal("")}
-            />
+            <SignUpForm showModal={() => setShowModal("login")} />
           ) : (
             <LoginForm
               showModal={() => setShowModal("create")}
               loginSuccess={() => setLoggedInSuccess(!loggedInSuccess)}
-              close={() => setShowModal("")}
             />
           )}
         </div>

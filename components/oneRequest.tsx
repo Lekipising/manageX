@@ -129,11 +129,23 @@ export default function ViewOneRequest({
           </h1>
         ) : (
           <div className="border-2 rounded-[5px] border-[#C6EBC5] p-4 relative">
-            <h2 className="text-[#000] text-[18px] font-medium">
+            <h2
+              className={`text-[#000] text-[18px] font-medium ${
+                requestComments.length === 0 ? "text-[12px]" : ""
+              }`}
+            >
               {requestComments.length === 0
                 ? "No comments for this request yet"
                 : "Comments"}
             </h2>
+            {!showCommentInput && loggedInUser?.role === "FACILITATOR" && (
+              <button
+                onClick={() => setShowCommentInput(true)}
+                className="rounded  absolute right-2 top-2 bg-[#FA7070] text-[14px] font-semibold px-4 text-white py-2"
+              >
+                Add new comment
+              </button>
+            )}
             <div
               className={`mt-2 overflow-y-auto ${
                 requestComments.length > 0 ? "h-[15vh]" : "h-[5vh]"
@@ -144,14 +156,6 @@ export default function ViewOneRequest({
               ))}
             </div>
 
-            {!showCommentInput && loggedInUser?.role === "FACILITATOR" && (
-              <button
-                onClick={() => setShowCommentInput(true)}
-                className="rounded mt-8 bg-[#FA7070] text-[14px] font-semibold px-4 text-white py-2"
-              >
-                Add new comment
-              </button>
-            )}
             {showCommentInput && (
               <div className="absolute inset-0 flex justify-center items-center bg-white">
                 <form className="flex flex-col gap-4 w-1/2 mt-6">
