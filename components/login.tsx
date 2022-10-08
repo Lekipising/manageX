@@ -49,7 +49,7 @@ export default function LoginForm({
   return (
     <div
       onClick={(e) => (e.target === e.currentTarget ? close() : null)}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#C6EBC5]"
     >
       <div className="w-[40vw] h-[30vw] rounded-[15px] p-8 flex flex-col gap-4 bg-white justify-center items-center">
         <h1 className="text-[#212121] font-bold text-[30px]">Login</h1>

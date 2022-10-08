@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function CreateRequest({
   close,
@@ -10,7 +10,12 @@ export default function CreateRequest({
 }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const loggedInUser = 24;
+
+  const [loggedInUser, setLoggedInUser] = useState<any>(null);
+
+  useEffect(() => {
+    setLoggedInUser(JSON.parse(localStorage.getItem("user")));
+  }, []);
 
   const resetForm = () => {
     setTitle("");
@@ -22,7 +27,7 @@ export default function CreateRequest({
     const requestObj = {
       title,
       description,
-      userId: loggedInUser,
+      userId: loggedInUser.id,
     };
     try {
       setLoading(true);

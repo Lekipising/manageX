@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { processDate } from "../lib/helpers";
+import Spinner from "./spinners";
 
 export default function ViewOneRequest({
   request,
@@ -82,7 +83,6 @@ export default function ViewOneRequest({
     }
   };
 
-  if (studentDetails === null || requestDetails === null) return null;
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
@@ -92,10 +92,10 @@ export default function ViewOneRequest({
         <h1 className="text-[#212121] font-bold text-[30px]">
           Request details
         </h1>
-        <h1 className="">{requestDetails.title}</h1>
+        <h1 className="">{requestDetails?.title}</h1>
         <div>
-          <h2>Student name: {studentDetails.name}</h2>
-          <h2>Submitted on: {processDate(requestDetails.createdAt)} </h2>
+          <h2>Student name: {studentDetails?.name}</h2>
+          <h2>Submitted on: {processDate(requestDetails?.createdAt)} </h2>
         </div>
         <div className="border-2 rounded-[5px] border-[#C6EBC5] p-4">
           <h2 className="text-[#000] text-[18px] font-medium">Comments</h2>
@@ -105,7 +105,7 @@ export default function ViewOneRequest({
             ))}
           </div>
 
-          {!showCommentInput && loggedInUser.role === "FACILITATOR" && (
+          {!showCommentInput && loggedInUser?.role === "FACILITATOR" && (
             <button
               onClick={() => setShowCommentInput(true)}
               className="rounded mt-8 bg-[#FA7070] text-[14px] font-semibold px-4 text-white py-2"

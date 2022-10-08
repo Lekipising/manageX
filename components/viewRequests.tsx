@@ -25,7 +25,11 @@ export default function ViewRequests({
   const getRequests = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/requests/get");
+      const url =
+        user.role === "STUDENT"
+          ? `/api/requests/get?userId=${user.id}`
+          : "/api/requests/get";
+      const res = await axios.get(url);
       setRequests(res.data);
       setLoading(false);
     } catch (error) {
@@ -64,7 +68,7 @@ export default function ViewRequests({
         </div>
       )}
       {!loading && (
-        <table className="w-[60vw]">
+        <table className="w-[60vw] rounded-[30px]">
           <thead className="">
             <tr className="rounded-[5px] bg-[#F6F4F9] text-left text-xs">
               <th className="py-3 px-6 font-semibold">ID</th>
