@@ -188,6 +188,7 @@ export default function SignUpForm() {
                 required
                 onFocus={() => setShowPasswordRequirements(true)}
                 onBlur={() => setShowPasswordRequirements(false)}
+                minLength={8}
               />
             </div>
             <div className="w-full">
@@ -204,6 +205,7 @@ export default function SignUpForm() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                minLength={8}
               />
             </div>
             <button
