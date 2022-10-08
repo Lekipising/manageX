@@ -1,7 +1,15 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-export default function LoginForm() {
+export default function LoginForm({
+  showModal,
+  loginSuccess,
+  close,
+}: {
+  showModal: (modal: string) => void;
+  loginSuccess: () => void;
+  close: () => void;
+}) {
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState(false);
   const [password, setPassword] = useState("");
@@ -29,6 +37,9 @@ export default function LoginForm() {
       console.log(res);
       setLoading(false);
       resetForm();
+      // save res.data to localStorage
+      localStorage.setItem("user", JSON.stringify(res.data));
+      loginSuccess();
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -36,7 +47,10 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div
+      onClick={(e) => (e.target === e.currentTarget ? close() : null)}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
       <div className="w-[40vw] h-[30vw] rounded-[15px] p-8 flex flex-col gap-4 bg-white justify-center items-center">
         <h1 className="text-[#212121] font-bold text-[30px]">Login</h1>
         <form className="flex flex-col gap-4 w-1/2 mt-6">
@@ -82,6 +96,12 @@ export default function LoginForm() {
           >
             {loading ? "Loading..." : "Login"}
           </button>
+          <span
+            className="text-xs underline cursor-pointer"
+            onClick={() => showModal("login")}
+          >
+            Need an account? Create here
+          </span>
         </form>
       </div>
     </div>

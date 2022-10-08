@@ -8,7 +8,13 @@ const lowercaseRegex = /[a-z]/;
 const numberRegex = /[0-9]/;
 const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
-export default function SignUpForm() {
+export default function SignUpForm({
+  showModal,
+  close
+}: {
+  showModal: (modal: string) => void;
+  close: () => void;
+}) {
   const [activeTab, setActiveTab] = useState("STUDENT");
 
   const [name, setName] = useState("");
@@ -102,6 +108,7 @@ export default function SignUpForm() {
       console.log(res);
       resetForm();
       setLoading(false);
+      showModal("login");
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -109,12 +116,15 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div
+      onClick={(e) => (e.target === e.currentTarget ? close() : null)}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
       <div className="w-[40vw] h-[30vw] rounded-[15px] p-8 flex flex-col gap-4 bg-white">
         <h1 className="text-[#212121] font-bold text-[30px]">
           Create an account
         </h1>
-        <div className="flex gap-2 bg-[#6D9886] p-4 rounded-[5px] w-[17vw]">
+        <div className="flex gap-2 bg-[#FA7070]/25 p-4 rounded-[5px] w-[17vw]">
           <span
             className={`text-black font-medium rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
               activeTab === "STUDENT" ? "bg-white" : ""
@@ -218,6 +228,12 @@ export default function SignUpForm() {
             >
               {loading ? "Creating..." : "Create account"}
             </button>
+            <span
+              className="text-xs underline cursor-pointer"
+              onClick={() => showModal("create")}
+            >
+              Have an account? Login here
+            </span>
           </form>
           <div className="flex justify-center items-center w-1/2 flex-col">
             {showPasswordRequirements ? (

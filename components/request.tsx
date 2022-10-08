@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-export default function CreateRequest() {
+export default function CreateRequest({ close }: { close: () => void }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const loggedInUser = 24;
@@ -24,6 +24,7 @@ export default function CreateRequest() {
       console.log(res);
       setLoading(false);
       resetForm();
+      close();
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -31,7 +32,10 @@ export default function CreateRequest() {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div
+      onClick={(e) => (e.target === e.currentTarget ? close() : null)}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
       <div className="w-[40vw] h-[30vw] rounded-[15px] p-8 flex flex-col gap-4 bg-white justify-center items-center">
         <h1 className="text-[#212121] font-bold text-[30px]">
           Create a request
