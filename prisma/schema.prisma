@@ -23,7 +23,8 @@ model User {
   updatedAt DateTime  @updatedAt
   role      String    @default("STUDENT")
   // create RELATIONSHIP
-  requests  Request[]
+  requests  Request[] @relation("RequestToUser")
+  assignments Request[] @relation("RequestToAssignee")
   Comment   Comment[]
 }
 
@@ -35,10 +36,13 @@ model Request {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   // create RELATIONSHIP
+  assignedId Int
   userId    Int
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation("RequestToUser", fields: [userId], references: [id])
+  assigned  User      @relation("RequestToAssignee", fields: [assignedId], references: [id])
   // create comments RELATIONSHIP
   comments  Comment[]
+
 }
 
 // create COMMENTS table

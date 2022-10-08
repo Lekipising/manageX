@@ -23,11 +23,14 @@ export default function CreateRequest({
   };
   const [loading, setLoading] = useState(false);
 
+  const [selectedFacilitator, setSelectedFacilitator] = useState("");
+
   const submitForm = async () => {
     const requestObj = {
       title,
       description,
       userId: loggedInUser.id,
+      assignedId: parseInt(selectedFacilitator),
     };
     try {
       setLoading(true);
@@ -42,6 +45,23 @@ export default function CreateRequest({
       console.log(error);
     }
   };
+
+  const [facilitators, setFacilitators] = useState<any[]>([]);
+
+  const fetchFacilitators = async () => {
+    try {
+      const res = await axios.get("/api/users/get?role=FACILITATOR");
+      setFacilitators(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (facilitators.length === 0) {
+      fetchFacilitators();
+    }
+  }, []);
 
   return (
     <div
@@ -76,9 +96,27 @@ export default function CreateRequest({
               placeholder="Enter request details"
             />
           </div>
+          <div>
+            <select
+              required
+              value={selectedFacilitator}
+              onChange={(e) => setSelectedFacilitator(e.target.value)}
+              className="h-full w-full rounded-md border border-slate-300 text-sm"
+              data-testid="select-payer"
+            >
+              <option value="">Choose facilitator</option>
+              {facilitators?.map((facilitator) => (
+                <option key={facilitator?.id} value={facilitator?.id}>
+                  {facilitator?.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <button
-            disabled={!title || !description || loading}
+            disabled={
+              !title || !description || loading || selectedFacilitator === ""
+            }
             onClick={(e) => {
               e.preventDefault();
               submitForm();
