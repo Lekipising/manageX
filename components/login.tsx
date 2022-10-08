@@ -51,7 +51,7 @@ export default function LoginForm({
       onClick={(e) => (e.target === e.currentTarget ? close() : null)}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-main"
     >
-      <div className="w-[40vw] h-[30vw] rounded-[15px] p-8 flex flex-col gap-4 bg-white justify-center items-center">
+      <div className="w-max min-w-[500px] h-max rounded-[15px] p-8 flex flex-col gap-4 bg-white justify-center items-center">
         <h1 className="text-[#212121] font-bold text-[30px]">Login</h1>
         <form className="flex flex-col gap-4 w-1/2 mt-6">
           <div className="w-full">

@@ -33,7 +33,7 @@ input, textarea {
     outline: none;
     border-radius: 5px;
     height: 40px;
-    padding: 0 5px;
+    padding: 10px;
 }
 
 input:focus, textarea:focus {

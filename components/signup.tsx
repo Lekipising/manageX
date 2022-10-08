@@ -120,11 +120,11 @@ export default function SignUpForm({
       onClick={(e) => (e.target === e.currentTarget ? close() : null)}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-main"
     >
-      <div className="w-[40vw] h-[30vw] rounded-[15px] p-8 flex flex-col gap-4 bg-white">
+      <div className="w-max min-w-[700px] h-max rounded-[15px] p-8 flex flex-col gap-4 bg-white">
         <h1 className="text-[#212121] font-bold text-[30px]">
           Create an account
         </h1>
-        <div className="flex gap-2 bg-main p-4 rounded-[5px] w-[18vw]">
+        <div className="flex gap-2 bg-main p-4 rounded-[5px] w-[330px]">
           <span
             className={`text-white text-sm font-semibold rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
               activeTab === "STUDENT" ? "bg-white text-black" : ""
@@ -150,7 +150,7 @@ export default function SignUpForm({
             CS Lead
           </span>
         </div>
-        <div className="flex w-full">
+        <div className="flex w-full relative">
           <form className="flex flex-col gap-4 w-1/2 mt-8">
             <div className="w-full">
               <input
@@ -238,8 +238,8 @@ export default function SignUpForm({
           <div className="flex justify-center items-center w-1/2 flex-col">
             {showPasswordRequirements ? (
               <div>
-                <h3>Password requirements:</h3>
-                <div className="flex gap-4">
+                <h3 className="mb-2 font-medium">Password requirements:</h3>
+                <div className="flex gap-4 mb-1">
                   <Image
                     src={hasLowercase ? "/correct.svg" : "/wrong.svg"}
                     height="20"
@@ -247,49 +247,52 @@ export default function SignUpForm({
                     objectFit="contain"
                     alt="Valid"
                   />
-                  <p>Contain atleast 1 lowercase</p>
+                  <p className="text-xs">Contain atleast 1 lowercase</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 mb-1">
                   <Image
                     src={hasUppercase ? "/correct.svg" : "/wrong.svg"}
                     height="20"
                     width="20"
                     alt="Valid"
                   />
-                  <p>Contain atleast 1 uppercase</p>
+                  <p className="text-xs">Contain atleast 1 uppercase</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 mb-1">
                   <Image
                     src={hasSpecialCharacter ? "/correct.svg" : "/wrong.svg"}
                     height="20"
                     width="20"
                     alt="Valid"
                   />
-                  <p>Contain atleast 1 special character</p>
+                  <p className="text-xs">Contain atleast 1 special character</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 mb-1">
                   <Image
                     src={hasNumber ? "/correct.svg" : "/wrong.svg"}
                     height="20"
                     width="20"
                     alt="Valid"
                   />
-                  <p>Contain atleast 1 number</p>
+                  <p className="text-xs">Contain atleast 1 number</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 mb-1">
                   <Image
                     src={hasEightCharacters ? "/correct.svg" : "/wrong.svg"}
                     height="20"
                     width="20"
                     alt="Valid"
                   />
-                  <p>Atleast 8 characters</p>
+                  <p className="text-xs">Atleast 8 characters</p>
                 </div>
               </div>
             ) : (
-              <h1 className="text-[25px] font-semibold text-[#FA7070]">
-                Welcome
-              </h1>
+              <div className="absolute right-16 flex flex-col items-center top-32">
+                <h1 className="text-[25px] font-semibold text-black">
+                  Welcome
+                </h1>
+                <p className="text-xs">Create an account to get started</p>
+              </div>
             )}
           </div>
         </div>
