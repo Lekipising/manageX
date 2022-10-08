@@ -10,7 +10,7 @@ const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
 export default function SignUpForm({
   showModal,
-  close
+  close,
 }: {
   showModal: (modal: string) => void;
   close: () => void;
@@ -118,32 +118,32 @@ export default function SignUpForm({
   return (
     <div
       onClick={(e) => (e.target === e.currentTarget ? close() : null)}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#C6EBC5]"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-main"
     >
       <div className="w-[40vw] h-[30vw] rounded-[15px] p-8 flex flex-col gap-4 bg-white">
         <h1 className="text-[#212121] font-bold text-[30px]">
           Create an account
         </h1>
-        <div className="flex gap-2 bg-[#FA7070]/25 p-4 rounded-[5px] w-[17vw]">
+        <div className="flex gap-2 bg-main p-4 rounded-[5px] w-[18vw]">
           <span
-            className={`text-black font-medium rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
-              activeTab === "STUDENT" ? "bg-white" : ""
+            className={`text-white text-sm font-semibold rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
+              activeTab === "STUDENT" ? "bg-white text-black" : ""
             }`}
             onClick={() => setActiveTab("STUDENT")}
           >
             Student
           </span>
           <span
-            className={`text-black font-medium rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
-              activeTab === "FACILITATOR" ? "bg-white" : ""
+            className={`text-white text-sm font-semibold rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
+              activeTab === "FACILITATOR" ? "bg-white text-black" : ""
             }`}
             onClick={() => setActiveTab("FACILITATOR")}
           >
             Facilitator
           </span>
           <span
-            className={`text-black font-medium rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
-              activeTab === "ADMIN" ? "bg-white" : ""
+            className={`text-white text-sm font-semibold rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
+              activeTab === "ADMIN" ? "bg-white text-black" : ""
             }`}
             onClick={() => setActiveTab("ADMIN")}
           >
@@ -229,7 +229,7 @@ export default function SignUpForm({
               {loading ? "Creating..." : "Create account"}
             </button>
             <span
-              className="text-xs underline cursor-pointer"
+              className="text-xs underline cursor-pointer w-full text-center"
               onClick={() => showModal("create")}
             >
               Have an account? Login here
