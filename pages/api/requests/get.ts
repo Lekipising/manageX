@@ -3,14 +3,14 @@ import prisma from '../../../lib/prisma'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // this request is used to get all requests or requests belonging to a user if we have parameter: userId
-    const { userId } = req.query;
-    console.log(userId);
+    const { userId, assignedId } = req.query;
     try {
         // get requests
-        if (userId) {
+        if (userId || assignedId) {
             const requests = await prisma.request.findMany({
                 where: {
-                    userId: Number(userId)
+                    userId: userId ? Number(userId) : undefined,
+                    assignedId: assignedId ? Number(assignedId) : undefined
                 }
             });
             // return requests

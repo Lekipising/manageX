@@ -22,13 +22,23 @@ export default function ViewRequests({
 
   const [loading, setLoading] = useState(false);
 
+  const getUrl = () => {
+    switch (user.role) {
+      case "STUDENT":
+        return "/api/requests/get?userId=" + user.id;
+      case "FACILITATOR":
+        return "/api/requests/get?assignedId=" + user.id;
+      case "ADMIN":
+        return "/api/requests/get";
+      default:
+        return "/api/requests/get";
+    }
+  };
+
   const getRequests = async () => {
     try {
       setLoading(true);
-      const url =
-        user.role === "STUDENT"
-          ? `/api/requests/get?userId=${user.id}`
-          : "/api/requests/get";
+      const url = getUrl();
       const res = await axios.get(url);
       setRequests(res.data);
       setLoading(false);
@@ -53,7 +63,13 @@ export default function ViewRequests({
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="font-bold text-[32px] text-white ">Requests submitted</h1>
+      <h1 className="font-bold text-[32px] text-white ">
+        {user.role === "STUDENT"
+          ? "Requests you have submitted"
+          : user.role === "FACILITATOR"
+          ? "Requests assigned to you"
+          : "All requests"}
+      </h1>
       {user.role === "STUDENT" && (
         <button
           onClick={() => showCreate()}
