@@ -1,3 +1,4 @@
+import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -8,7 +9,7 @@ const numberRegex = /[0-9]/;
 const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
 export default function SignUpForm() {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState("STUDENT");
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -73,6 +74,40 @@ export default function SignUpForm() {
   const [showPasswordRequirements, setShowPasswordRequirements] =
     useState(false);
 
+  const [loading, setLoading] = useState(false);
+
+  const resetForm = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setHasEightCharacters(false);
+    setHasUppercase(false);
+    setHasLowercase(false);
+    setHasNumber(false);
+    setHasSpecialCharacter(false);
+    setButtonEnabled(false);
+  };
+
+  const submitForm = async () => {
+    const userObj = {
+      name,
+      email,
+      password,
+      role: activeTab,
+    };
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/users/create", userObj);
+      console.log(res);
+      resetForm();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="w-[40vw] h-[30vw] rounded-[15px] p-8 flex flex-col gap-4 bg-white">
@@ -82,25 +117,25 @@ export default function SignUpForm() {
         <div className="flex gap-2 bg-[#6D9886] p-4 rounded-[5px] w-[17vw]">
           <span
             className={`text-black font-medium rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
-              activeTab === 0 ? "bg-white" : ""
+              activeTab === "STUDENT" ? "bg-white" : ""
             }`}
-            onClick={() => setActiveTab(0)}
+            onClick={() => setActiveTab("STUDENT")}
           >
             Student
           </span>
           <span
             className={`text-black font-medium rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
-              activeTab === 1 ? "bg-white" : ""
+              activeTab === "FACILITATOR" ? "bg-white" : ""
             }`}
-            onClick={() => setActiveTab(1)}
+            onClick={() => setActiveTab("FACILITATOR")}
           >
             Facilitator
           </span>
           <span
             className={`text-black font-medium rounded-[5px] px-3 py-1 cursor-pointer transition-all ease-in duration-300 ${
-              activeTab === 2 ? "bg-white" : ""
+              activeTab === "ADMIN" ? "bg-white" : ""
             }`}
-            onClick={() => setActiveTab(2)}
+            onClick={() => setActiveTab("ADMIN")}
           >
             CS Lead
           </span>
@@ -172,14 +207,14 @@ export default function SignUpForm() {
               />
             </div>
             <button
-              disabled={!buttonEnabled}
+              disabled={!buttonEnabled || loading}
               onClick={(e) => {
                 e.preventDefault();
-                console.log("submit");
+                submitForm();
               }}
               className="disabled:bg-[#828282] bg-[#FA7070] mt-8 text-white px-8 py-2 font-bold rounded-[5px] w-full"
             >
-              Create account
+              {loading ? "Creating..." : "Create account"}
             </button>
           </form>
           <div className="flex justify-center items-center w-1/2 flex-col">
