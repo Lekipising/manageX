@@ -46,6 +46,9 @@ export default function ViewOneRequest({
   };
 
   const [fetchingComments, setFetchingComments] = useState(false);
+
+  const [reloadComments, setReloadComments] = useState(false);
+
   const fetchComments = async () => {
     try {
       setFetchingComments(true);
@@ -64,6 +67,10 @@ export default function ViewOneRequest({
       fetchComments();
     }
   }, []);
+
+  useEffect(() => {
+    fetchComments();
+  }, [reloadComments]);
 
   useEffect(() => {
     if (studentDetails === null && requestDetails?.userId) {
@@ -89,6 +96,7 @@ export default function ViewOneRequest({
       setLoading(false);
       setComment("");
       setShowCommentInput(false);
+      setReloadComments(!reloadComments);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -120,13 +128,17 @@ export default function ViewOneRequest({
             Getting comments...
           </h1>
         ) : (
-          <div className="border-2 rounded-[5px] border-[#C6EBC5] p-4">
+          <div className="border-2 rounded-[5px] border-[#C6EBC5] p-4 relative">
             <h2 className="text-[#000] text-[18px] font-medium">
               {requestComments.length === 0
                 ? "No comments for this request yet"
                 : "Comments"}
             </h2>
-            <div className="mt-2 h-[15vh] overflow-y-auto">
+            <div
+              className={`mt-2 overflow-y-auto ${
+                requestComments.length > 0 ? "h-[15vh]" : "h-[5vh]"
+              }`}
+            >
               {requestComments.map((comment: any) => (
                 <OneComment key={comment.id} comment={comment} />
               ))}
@@ -141,27 +153,29 @@ export default function ViewOneRequest({
               </button>
             )}
             {showCommentInput && (
-              <form className="flex flex-col gap-4 w-1/2 mt-6">
-                <textarea
-                  name="comment"
-                  id="comment"
-                  className="w-full h-[100px]"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  required
-                  placeholder="Write comment"
-                />
-                <button
-                  disabled={!comment || loading}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    submitForm();
-                  }}
-                  className="disabled:bg-[#828282] bg-[#FA7070] mt-8 text-white px-8 py-2 font-bold rounded-[5px] w-full"
-                >
-                  {loading ? "Creating..." : "Add comment"}
-                </button>
-              </form>
+              <div className="absolute inset-0 flex justify-center items-center bg-white">
+                <form className="flex flex-col gap-4 w-1/2 mt-6">
+                  <textarea
+                    name="comment"
+                    id="comment"
+                    className="w-full h-[100px]"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    required
+                    placeholder="Write comment"
+                  />
+                  <button
+                    disabled={!comment || loading}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      submitForm();
+                    }}
+                    className="disabled:bg-[#828282] bg-[#FA7070] mt-8 text-white px-8 py-2 font-bold rounded-[5px] w-full"
+                  >
+                    {loading ? "Creating..." : "Add comment"}
+                  </button>
+                </form>
+              </div>
             )}
           </div>
         )}
