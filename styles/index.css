@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: none;
+    font-family: "Inter", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background-image: linear-gradient(to right, #2c3e50, #4ca1af);
+}
+
+* {
+    scrollbar-color: #cf021a #fff;
+}
+
+input {
+    border: 1px solid black;
+    outline: none;
+    border-radius: 5px;
+    height: 40px;
+    padding: 0 5px;
+}
+
+input:focus {
+    border: 1px solid black;
+    outline: none;
+}
