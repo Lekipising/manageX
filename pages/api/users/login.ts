@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
+import bcrypt from 'bcrypt';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // request to receive login data
@@ -15,9 +16,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (!user) {
             return res.status(400).json({ message: 'User does not exist' });
         }
-        // check if password matches
-        if (user.password !== password) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+        // check hashed password with password in database
+        // @ts-ignore
+        const validPassword = await bcrypt.compare(password, user.password);
+        // check if password is valid
+        if (!validPassword) {
+            return res.status(400).json({ message: 'Password is not correct' });
         }
         // return user
         res.status(200).json(user);

@@ -42,7 +42,6 @@ export default function Home() {
 
   const [allCourses, setAllCourses] = useState<any[]>();
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
-  const [filteredCourses, setFilteredCourses] = useState<any[]>([]);
 
   const getEnrolledCourses = async () => {
     const res = await axios.post("/api/courses/user", {
@@ -65,7 +64,7 @@ export default function Home() {
     if (allCourses && enrolledCourses && user?.role === "STUDENT") {
       setAllCourses(filterEnrolledCourses(allCourses, enrolledCourses));
     }
-  }, [allCourses, enrolledCourses]);
+  }, [allCourses, enrolledCourses, user]);
 
   useEffect(() => {
     if (isLoggedIn && !allCourses) {
@@ -147,24 +146,28 @@ export default function Home() {
                       ? "Browse assigned courses"
                       : "Browse available courses"}
                   </h2>
-                  <div
-                    onClick={() => setShowCreate(true)}
-                    className="flex flex-col hover:bg-[#FA7070]/60 p-1 rounded-md items-center cursor-pointer absolute right-4 top-2"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="#fff"
-                      className="w-8 h-8"
+                  {user.role === "ADMIN" && (
+                    <div
+                      onClick={() => setShowCreate(true)}
+                      className="flex flex-col hover:bg-[#FA7070]/60 p-1 rounded-md items-center cursor-pointer absolute right-4 top-2"
                     >
-                      <path
-                        fillRule="evenodd"
-                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <h3 className="text-white font-bold text-lg">Add Course</h3>
-                  </div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="#fff"
+                        className="w-8 h-8"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <h3 className="text-white font-bold text-lg">
+                        Add Course
+                      </h3>
+                    </div>
+                  )}
                 </div>
 
                 {allCourses && (
@@ -184,6 +187,11 @@ export default function Home() {
                       />
                     ))}
                   </div>
+                )}
+                {allCourses?.length === 0 && (
+                  <h1 className="text-white font-medium">
+                    No courses available at the moment.
+                  </h1>
                 )}
               </section>
             </div>

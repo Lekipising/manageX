@@ -3,7 +3,7 @@ import prisma from '../../../lib/prisma'
 
 // bcrypt for password encryption
 // @ts-ignore
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // request to receive data and create user
@@ -11,12 +11,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // defining password encryption and password hashing as two alternatives
 
     // 1. password encryption
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    // const salt = await bcrypt.genSalt(10);
+    // const hashedPassword = await bcrypt.hash(password, salt);
+
+    // the weakness of password encryption is that the same password will always be encrypted to the same value
 
     // 2. password hashing
-    // const hashedPassword = await bcrypt.hash(password, 10);
+    const saltRounds = 2;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    // we use salting and rounds to make the encryption more secure and to make it harder to decrypt the password
 
     try {
         // create user

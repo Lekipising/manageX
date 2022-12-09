@@ -182,7 +182,9 @@ export default function CourseView({
             <tr className="rounded-[5px] bg-[#F6F4F9] text-left text-xs">
               <th className="py-3 px-6 font-semibold">name</th>
               <th className="hidden py-3 font-semibold md:table-cell">email</th>
-              <th className="py-3 pr-12 text-right font-semibold">Grade</th>
+              <th className="py-3 pr-12 text-right font-semibold">
+                Add/Edit Grade
+              </th>
             </tr>
           </thead>
 
@@ -203,6 +205,7 @@ export default function CourseView({
                 <td className="hidden text-xs md:table-cell">{req.email}</td>
                 <td className="pr-8 text-right">
                   <button
+                    className="bg-[#F6F4F9] text-xs px-6 py-1 rounded-lg"
                     onClick={() => {
                       fetchGrade(req.id);
                       setShowAddGrade(req.id);
@@ -217,7 +220,9 @@ export default function CourseView({
         </table>
         {showAddGrade && (
           <div
-            onClick={(e) => (e.target === e.currentTarget ? close() : null)}
+            onClick={(e) =>
+              e.target === e.currentTarget ? setShowAddGrade(false) : null
+            }
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
           >
             <div className="bg-white p-8 rounded-md">
