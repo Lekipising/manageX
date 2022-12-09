@@ -22,6 +22,7 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   role      String    @default("STUDENT")
+  courseId  Int      @default(4)
   // create RELATIONSHIP
   courses  Course[]
   grades   Grade[]
@@ -36,6 +37,8 @@ model Course {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   userId    Int      @default(144)
+  studentId Int     @default(4)
+  gradeId   Int    @default(4)
   // create RELATIONSHIP
   users     User[]
   grades    Grade[]
@@ -48,9 +51,7 @@ model Grade {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   status     Boolean
-  moduleCode Int
-  userId    Int
   // create RELATIONSHIP
-  course    Course   @relation(fields: [moduleCode], references: [moduleCode])
-  user      User    @relation(fields: [userId], references: [id])
+  course    Course[]
+  user      User[]
 }

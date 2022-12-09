@@ -13,8 +13,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const newGrade = await prisma.grade.create({
       data: {
-        grade,
-        status: grade >= 50 ? true : false,
+        grade: Number(grade),
+        status: Number(grade) >= 50 ? true : false,
         course: {
           connect: {
             moduleCode: Number(courseId),
@@ -27,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       },
     });
-
+    // update the grade field in the course table for the student
     const course = await prisma.course.update({
       where: {
         moduleCode: Number(courseId),
@@ -40,8 +40,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       },
     });
-
-    res.status(200).json(course);
+    return res.status(200).json(newGrade);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });

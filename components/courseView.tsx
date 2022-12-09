@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { processDate } from "../lib/helpers";
 
 export default function CourseView({
   user,
@@ -10,6 +11,26 @@ export default function CourseView({
   reloadRequests,
 }) {
   const [laoding, setLoading] = useState(false);
+
+  const [students, setStudents] = useState<any[]>([]);
+
+  const fetchStudents = async () => {
+    try {
+      const res = await axios.post("/api/courses/users", {
+        courseId: course.moduleCode,
+      });
+      setStudents(res.data.users);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (students.length === 0) {
+      fetchStudents();
+    }
+  }, []);
+
   const deleteCourse = async () => {
     setLoading(true);
     try {
@@ -31,6 +52,48 @@ export default function CourseView({
       console.log(error);
     }
   };
+
+  const [showAddGrade, setShowAddGrade] = useState(false);
+
+  const [grade, setGrade] = useState("");
+
+  const createGrade = async (e, studentId) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await axios.post("/api/courses/grade", {
+        courseId: course.moduleCode,
+        studentId,
+        grade: grade,
+      });
+      Swal.fire({
+        title: "Success!",
+        text: "Grade created successfully",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setLoading(false);
+      setShowAddGrade(false);
+      fetchStudents();
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  const fetchGrade = async (studentId) => {
+    try {
+      const res = await axios.post("/api/courses/student-grade", {
+        courseId: course.moduleCode,
+        studentId,
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <section>
       <section className="bg-[#2c3e50] h-max mt-16 pb-8 gap-2 mr-8 relative w-[80vw] rounded-lg flex flex-col px-8 py-4">
@@ -74,7 +137,7 @@ export default function CourseView({
                 <h3 className="text-white font-semibold text-lg">
                   Enrolled students:
                 </h3>
-                <h4 className="text-white text-lg">10</h4>
+                <h4 className="text-white text-lg">{students.length}</h4>
               </div>
               {user.role === "ADMIN" && (
                 <>
@@ -99,7 +162,84 @@ export default function CourseView({
               )}
             </div>
           )}
+          {user.role === "STUDENT" && (
+            <div className="flex flex-col gap-4 mt-2">
+              <div className="flex gap-2">
+                <h3 className="text-white font-semibold text-lg">Grade:</h3>
+                <h4 className="text-white text-lg">{students.length}</h4>
+              </div>
+            </div>
+          )}
         </div>
+      </section>
+
+      <section className="bg-[#2c3e50] h-max mt-16 pb-8 gap-2 mr-8 relative w-[80vw] rounded-lg flex flex-col px-8 py-4">
+        <h2 className="text-white font-bold text-xl w-full text-center">
+          Students enrolled
+        </h2>
+        <table className="w-full rounded-[30px]">
+          <thead className="">
+            <tr className="rounded-[5px] bg-[#F6F4F9] text-left text-xs">
+              <th className="py-3 px-6 font-semibold">name</th>
+              <th className="hidden py-3 font-semibold md:table-cell">email</th>
+              <th className="py-3 pr-12 text-right font-semibold">Grade</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {students.length === 0 && (
+              <tr className="bg-white rounded-[5px]">
+                <td
+                  className="py-3 px-6 text-xs text-center font-bold"
+                  colSpan={3}
+                >
+                  No students enrolled
+                </td>
+              </tr>
+            )}
+            {students.map((req) => (
+              <tr key={req.id} className="bg-[#C6EBC5]">
+                <td className="py-3 pl-6 text-xs">{req.name}</td>
+                <td className="hidden text-xs md:table-cell">{req.email}</td>
+                <td className="pr-8 text-right">
+                  <button
+                    onClick={() => {
+                      fetchGrade(req.id);
+                      setShowAddGrade(req.id);
+                    }}
+                  >
+                    Grade
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {showAddGrade && (
+          <div
+            onClick={(e) => (e.target === e.currentTarget ? close() : null)}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          >
+            <div className="bg-white p-8 rounded-md">
+              <form className="flex gap-6">
+                <input
+                  type="text"
+                  name="grade"
+                  value={grade}
+                  onChange={(e) => setGrade(e.target.value)}
+                  id="grade"
+                  placeholder="Enter grade"
+                />
+                <button
+                  onClick={(e) => createGrade(e, showAddGrade)}
+                  className="px-6 py-1 rounded-lg border-black border-[1px]"
+                >
+                  Update
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </section>
     </section>
   );

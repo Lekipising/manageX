@@ -2,10 +2,8 @@ import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import LoginForm from "../components/login";
-import CreateRequest from "../components/request";
 import SignUpForm from "../components/signup";
-import ViewRequests from "../components/viewRequests";
-import ViewOneRequest from "../components/oneRequest";
+
 import Spinner from "../components/spinners";
 import CourseCard from "../components/courseCard";
 import CourseView from "../components/courseView";
@@ -33,7 +31,25 @@ export default function Home() {
 
   const [reloadRequests, setReloadRequests] = useState(false);
 
+  const filterEnrolledCourses = (allCourses, enrolledCourses) => {
+    const enrolledCourseIds = enrolledCourses.map(
+      (course) => course.moduleCode
+    );
+    return allCourses.filter(
+      (course) => !enrolledCourseIds.includes(course.moduleCode)
+    );
+  };
+
   const [allCourses, setAllCourses] = useState<any[]>();
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+  const [filteredCourses, setFilteredCourses] = useState<any[]>([]);
+
+  const getEnrolledCourses = async () => {
+    const res = await axios.post("/api/courses/user", {
+      userId: user.id,
+    });
+    setEnrolledCourses(res.data.courses);
+  };
 
   const fetchCourses = async () => {
     const res = await axios.get("/api/courses/get");
@@ -46,11 +62,19 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (allCourses && enrolledCourses && user?.role === "STUDENT") {
+      setAllCourses(filterEnrolledCourses(allCourses, enrolledCourses));
+    }
+  }, [allCourses, enrolledCourses]);
+
+  useEffect(() => {
     if (isLoggedIn && !allCourses) {
+      getEnrolledCourses();
       fetchCourses();
     }
     if (reloadRequests) {
       fetchCourses();
+      getEnrolledCourses();
       setReloadRequests(false);
     }
   }, [reloadRequests, isLoggedIn]);
@@ -94,17 +118,24 @@ export default function Home() {
                   </h2>
                   {
                     <div className="flex gap-4 flex-wrap">
-                      {allCourses &&
-                        allCourses.map((crs) => (
+                      {enrolledCourses &&
+                        enrolledCourses.map((crs) => (
                           <CourseCard
                             key={crs.id}
+                            user={user}
                             title={crs.title}
+                            courseId={crs.moduleCode}
                             btnTextAndAction={{
                               text: "View",
                               action: () => setShowingCourse(crs),
                             }}
                           />
                         ))}
+                      {enrolledCourses.length === 0 && (
+                        <h1 className="text-white font-medium">
+                          You have not enrolled in any course yet.
+                        </h1>
+                      )}
                     </div>
                   }
                 </section>
@@ -141,10 +172,14 @@ export default function Home() {
                     {allCourses.map((crs) => (
                       <CourseCard
                         key={crs.id}
+                        courseId={crs.moduleCode}
+                        user={user}
                         title={crs.title}
                         btnTextAndAction={{
                           text: user.role === "STUDENT" ? "Enroll" : "Manage",
-                          action: () => setShowingCourse(crs),
+                          action: () => {
+                            setShowingCourse(crs);
+                          },
                         }}
                       />
                     ))}
