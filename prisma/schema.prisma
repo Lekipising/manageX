@@ -23,37 +23,34 @@ model User {
   updatedAt DateTime  @updatedAt
   role      String    @default("STUDENT")
   // create RELATIONSHIP
-  requests  Request[] @relation("RequestToUser")
-  assignments Request[] @relation("RequestToAssignee")
-  Comment   Comment[]
+  courses  Course[]
+  grades   Grade[]
 }
 
-// create REQUESTS table
-model Request {
-  id        Int       @id @default(autoincrement())
-  title     String
-  content   String
+// create COURSES table
+model Course {
+  moduleCode        Int       @id @default(autoincrement())
+  title      String
+  credits   Int
+  year      Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  userId    Int      @default(144)
   // create RELATIONSHIP
-  assignedId Int
-  userId    Int
-  user      User      @relation("RequestToUser", fields: [userId], references: [id])
-  assigned  User      @relation("RequestToAssignee", fields: [assignedId], references: [id])
-  // create comments RELATIONSHIP
-  comments  Comment[]
-
+  users     User[]
+  grades    Grade[]
 }
 
-// create COMMENTS table
-model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  // create RELATIONSHIP
-  requestId Int
-  request   Request  @relation(fields: [requestId], references: [id])
+// create GRADES table
+model Grade {
+  id        Int       @id @default(autoincrement())
+  grade     Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  status     Boolean
+  moduleCode Int
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  // create RELATIONSHIP
+  course    Course   @relation(fields: [moduleCode], references: [moduleCode])
+  user      User    @relation(fields: [userId], references: [id])
 }

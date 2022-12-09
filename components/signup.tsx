@@ -151,7 +151,7 @@ export default function SignUpForm({
             }`}
             onClick={() => setActiveTab("ADMIN")}
           >
-            CS Lead
+            Lead
           </span>
         </div>
         <div className="flex w-full relative">

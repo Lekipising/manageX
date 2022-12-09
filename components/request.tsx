@@ -3,15 +3,18 @@ import React, { useState, useEffect } from "react";
 
 import Swal from "sweetalert2";
 
-export default function CreateRequest({
+export default function CreateCourse({
   close,
   reloadRequests,
+  isUpdate,
 }: {
   close: () => void;
   reloadRequests: () => void;
+  isUpdate?: any;
 }) {
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [year, setYear] = useState("");
+  const [credits, setCredits] = useState("");
 
   const [loggedInUser, setLoggedInUser] = useState<any>(null);
 
@@ -21,25 +24,50 @@ export default function CreateRequest({
 
   const resetForm = () => {
     setTitle("");
-    setDescription("");
   };
   const [loading, setLoading] = useState(false);
 
   const [selectedFacilitator, setSelectedFacilitator] = useState("");
 
+  const updateCourse = async ({ obj }) => {
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/courses/update", obj);
+      Swal.fire({
+        title: "Success!",
+        text: "Course updated successfully",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      console.log(res);
+      setLoading(false);
+      resetForm();
+      reloadRequests();
+      close();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const submitForm = async () => {
     const requestObj = {
       title,
-      description,
-      userId: loggedInUser.id,
-      assignedId: parseInt(selectedFacilitator),
+      credits: parseInt(credits),
+      year: parseInt(year),
+      userId: selectedFacilitator,
+      id: isUpdate ? isUpdate.moduleCode : null,
     };
+    if (isUpdate) {
+      updateCourse({ obj: requestObj });
+      return;
+    }
     try {
       setLoading(true);
-      const res = await axios.post("/api/requests/create", requestObj);
+      const res = await axios.post("/api/courses/create", requestObj);
       Swal.fire({
         title: "Success!",
-        text: "Request created successfully",
+        text: "Course created successfully",
         icon: "success",
         showConfirmButton: false,
         timer: 1500,
@@ -72,6 +100,15 @@ export default function CreateRequest({
     }
   }, []);
 
+  useEffect(() => {
+    if (isUpdate) {
+      setTitle(isUpdate.title);
+      setYear(isUpdate.year);
+      setCredits(isUpdate.credits);
+      setSelectedFacilitator(isUpdate.userId);
+    }
+  }, [isUpdate]);
+
   return (
     <div
       onClick={(e) => (e.target === e.currentTarget ? close() : null)}
@@ -79,7 +116,7 @@ export default function CreateRequest({
     >
       <div className="w-[40vw] h-[30vw] rounded-[15px] p-8 flex flex-col gap-4 bg-white justify-center items-center">
         <h1 className="text-[#212121] font-bold text-[30px]">
-          Create a request
+          {isUpdate ? "Edit course" : "Create a course"}
         </h1>
         <form className="flex flex-col gap-4 w-1/2 mt-6">
           <div className="w-full">
@@ -87,7 +124,7 @@ export default function CreateRequest({
               type="text"
               name="title"
               id="title"
-              placeholder="Enter title"
+              placeholder="Enter name"
               className="w-full"
               value={title}
               required
@@ -95,14 +132,27 @@ export default function CreateRequest({
             />
           </div>
           <div className="w-full">
-            <textarea
-              name="content"
-              id="content"
-              className="w-full h-[100px]"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+            <input
+              type="text"
+              name="year"
+              id="year"
+              placeholder="Enter year"
+              className="w-full"
+              value={year}
               required
-              placeholder="Enter request details"
+              onChange={(e) => setYear(e.target.value)}
+            />
+          </div>
+          <div className="w-full">
+            <input
+              type="text"
+              name="credits"
+              id="credits"
+              placeholder="Enter credits"
+              className="w-full"
+              value={credits}
+              required
+              onChange={(e) => setCredits(e.target.value)}
             />
           </div>
           <div>
@@ -110,7 +160,7 @@ export default function CreateRequest({
               required
               value={selectedFacilitator}
               onChange={(e) => setSelectedFacilitator(e.target.value)}
-              className="h-full w-full rounded-md border border-slate-300 text-sm"
+              className="h-full w-full py-1 px-4 rounded-md border border-slate-300 text-sm"
               data-testid="select-payer"
             >
               <option value="">Choose facilitator</option>
@@ -124,7 +174,11 @@ export default function CreateRequest({
 
           <button
             disabled={
-              !title || !description || loading || selectedFacilitator === ""
+              !title ||
+              !credits ||
+              !year ||
+              loading ||
+              selectedFacilitator === ""
             }
             onClick={(e) => {
               e.preventDefault();
@@ -132,7 +186,9 @@ export default function CreateRequest({
             }}
             className="disabled:bg-[#828282] bg-[#FA7070] mt-8 text-white px-8 py-2 font-bold rounded-[5px] w-full"
           >
-            {loading ? "Creating..." : "Create request"}
+            {loading
+              ? "Creating..."
+              : `${isUpdate ? "Update course" : "Create course"}`}
           </button>
         </form>
       </div>
